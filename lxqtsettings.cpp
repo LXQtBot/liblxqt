@@ -30,6 +30,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QDir>
+#include <QLatin1StringView>
 #include <QStringList>
 #include <QMutex>
 #include <QFileSystemWatcher>
@@ -39,6 +40,7 @@
 
 #include <XdgDirs>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 class LXQt::SettingsPrivate
@@ -308,7 +310,7 @@ QString SettingsPrivate::localizedKey(const QString& key) const
 
     if (!modifier.isEmpty() && !country.isEmpty())
     {
-        QString k = QString::fromLatin1("%1[%2_%3@%4]").arg(key, lang, country, modifier);
+        QString k = "%1[%2_%3@%4]"_L1.arg(key, lang, country, modifier);
         //qDebug() << "\t try " << k << mParent->contains(k);
         if (mParent->contains(k))
             return k;
@@ -316,7 +318,7 @@ QString SettingsPrivate::localizedKey(const QString& key) const
 
     if (!country.isEmpty())
     {
-        QString k = QString::fromLatin1("%1[%2_%3]").arg(key, lang, country);
+        QString k = "%1[%2_%3]"_L1.arg(key, lang, country);
         //qDebug() << "\t try " << k  << mParent->contains(k);
         if (mParent->contains(k))
             return k;
@@ -324,13 +326,13 @@ QString SettingsPrivate::localizedKey(const QString& key) const
 
     if (!modifier.isEmpty())
     {
-        QString k = QString::fromLatin1("%1[%2@%3]").arg(key, lang, modifier);
+        QString k = "%1[%2@%3]"_L1.arg(key, lang, modifier);
         //qDebug() << "\t try " << k  << mParent->contains(k);
         if (mParent->contains(k))
             return k;
     }
 
-    QString k = QString::fromLatin1("%1[%2]").arg(key, lang);
+    QString k = "%1[%2]"_L1.arg(key, lang);
     //qDebug() << "\t try " << k  << mParent->contains(k);
     if (mParent->contains(k))
         return k;
@@ -416,7 +418,7 @@ QString LXQtThemeData::findTheme(const QString &themeName)
 
     for(const QString &path : std::as_const(paths))
     {
-        QDir dir(QString::fromLatin1("%1/lxqt/themes/%2").arg(path, themeName));
+        QDir dir("%1/lxqt/themes/%2"_L1.arg(path, themeName));
         if (dir.isReadable())
             return dir.absolutePath();
     }
@@ -530,7 +532,7 @@ QString LXQtThemeData::loadQss(const QString& qssFile) const
  ************************************************/
 QString LXQtTheme::desktopBackground(int screen) const
 {
-    QString wallpaperCfgFileName = QString::fromLatin1("%1/wallpaper.cfg").arg(d->mPath);
+    QString wallpaperCfgFileName = "%1/wallpaper.cfg"_L1.arg(d->mPath);
 
     if (wallpaperCfgFileName.isEmpty())
         return QString();
@@ -543,11 +545,11 @@ QString LXQtTheme::desktopBackground(int screen) const
 
     s.setArrayIndex(screen - 1);
     if (s.contains(QL1SV("file")))
-        return QDir::cleanPath(QString::fromLatin1("%1/%2").arg(themeDir, s.value(QL1SV("file")).toString()));
+        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value(QL1SV("file")).toString()));
 
     s.setArrayIndex(0);
     if (s.contains(QL1SV("file")))
-        return QDir::cleanPath(QString::fromLatin1("%1/%2").arg(themeDir, s.value(QL1SV("file")).toString()));
+        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value(QL1SV("file")).toString()));
 
     return QString();
 }
@@ -582,7 +584,7 @@ QList<LXQtTheme> LXQtTheme::allThemes()
 
     for(const QString &path : std::as_const(paths))
     {
-        QDir dir(QString::fromLatin1("%1/lxqt/themes").arg(path));
+        QDir dir("%1/lxqt/themes"_L1.arg(path));
         const QFileInfoList dirs = dir.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot);
 
         for(const QFileInfo &dir : dirs)
@@ -662,7 +664,7 @@ GlobalSettings::GlobalSettings():
 {
     if (value(QL1SV("icon_theme")).toString().isEmpty())
     {
-        qWarning() << QString::fromLatin1("Icon Theme not set. Fallbacking to Oxygen, if installed");
+        qWarning() << "Icon Theme not set. Fallbacking to Oxygen, if installed"_L1;
         const QString fallback(QL1SV("oxygen"));
 
         const QDir dir(QStringLiteral(LXQT_DATA_DIR) + QStringLiteral("/icons"));
@@ -673,7 +675,7 @@ GlobalSettings::GlobalSettings():
         }
         else
         {
-            qWarning() << QString::fromLatin1("Fallback Icon Theme (Oxygen) not found");
+            qWarning() << "Fallback Icon Theme (Oxygen) not found"_L1;
         }
     }
 

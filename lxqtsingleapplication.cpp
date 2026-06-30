@@ -33,16 +33,18 @@
 #include <QDBusMessage>
 #include <QWidget>
 #include <QDebug>
+#include <QLatin1StringView>
+#include <QString>
 #include <QTimer>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 SingleApplication::SingleApplication(int &argc, char **argv, StartOptions options)
     : Application(argc, argv, true),
     mActivationWindow(nullptr)
 {
-    QString service =
-        QString::fromLatin1("org.lxqt.%1").arg(QApplication::applicationName());
+    QString service = "org.lxqt.%1"_L1.arg(QApplication::applicationName());
 
     QDBusConnection bus = QDBusConnection::sessionBus();
 

@@ -30,12 +30,15 @@
 #include <QObject>
 #include <QFileInfo>
 #include <QDir>
+#include <QLatin1StringView>
+#include <QString>
 #include <QTranslator>
 #include <QCoreApplication>
 #include <QLibrary>
 #include <QDebug>
 #include <utility>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 /************************************************
@@ -75,14 +78,14 @@ QLibrary* PluginInfo::loadLibrary(const QString& libDir) const
 {
     const QFileInfo fi = QFileInfo(fileName());
     const QString path = fi.canonicalPath();
-    const QString baseName = value(QL1SV("X-LXQt-Library"), fi.completeBaseName()).toString();
+    const QString baseName = value("X-LXQt-Library"_L1, fi.completeBaseName()).toString();
 
-    const QString soPath = QDir(libDir).filePath(QString::fromLatin1("lib%2.so").arg(baseName));
+    const QString soPath = QDir(libDir).filePath("lib%2.so"_L1.arg(baseName));
     QLibrary* library = new QLibrary(soPath);
 
     if (!library->load())
     {
-        qWarning() << QString::fromLatin1("Can't load plugin lib \"%1\"").arg(soPath) << library->errorString();
+        qWarning() << "Can't load plugin lib \"%1\""_L1.arg(soPath) << library->errorString();
         delete library;
         return nullptr;
     }
@@ -90,9 +93,9 @@ QLibrary* PluginInfo::loadLibrary(const QString& libDir) const
     const QString locale = QLocale::system().name();
     QTranslator* translator = new QTranslator(library);
 
-    if(!translator->load(QString::fromLatin1("%1/%2/%2_%3.qm").arg(path, baseName, locale)))
+    if(!translator->load("%1/%2/%2_%3.qm"_L1.arg(path, baseName, locale)))
     {
-        qWarning() << QString::fromLatin1("Can't load translator: ").arg(translator->filePath());
+        qWarning() << "Can't load translator: "_L1.arg(translator->filePath());
     }
     qApp->installTranslator(translator);
 
@@ -144,7 +147,7 @@ PluginInfoList PluginInfo::search(const QString& desktopFilesDir, const QString&
  ************************************************/
 LXQT_API QDebug operator<<(QDebug dbg, const LXQt::PluginInfo &pluginInfo)
 {
-    dbg.nospace() << QString::fromLatin1("%1").arg(pluginInfo.id());
+    dbg.nospace() << "%1"_L1.arg(pluginInfo.id());
     return dbg.space();
 }
 
