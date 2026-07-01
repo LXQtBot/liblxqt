@@ -88,7 +88,7 @@ static bool dbusCall(const QString &service,
         {
             Notification::notify(
                                     QObject::tr("Power Manager Error"),
-                                    QObject::tr("QDBusInterface is invalid") + QL1SV("\n\n") + service + QL1C(' ') + path + QL1C(' ') + interface + QL1C(' ') + method,
+                                    QObject::tr("QDBusInterface is invalid") + QL1SV("\n\n") + service + u' ' + path + u' ' + interface + u' ' + method,
                                     QL1SV("lxqt-logo.png"));
         }
         return false;
@@ -138,7 +138,7 @@ static bool dbusCallSystemd(const QString &service,
         {
             Notification::notify(
                                     QObject::tr("Power Manager Error"),
-                                    QObject::tr("QDBusInterface is invalid") + QL1SV("\n\n") + service + QL1C(' ') + path + QL1C(' ')+ interface + QL1C(' ') + method,
+                                    QObject::tr("QDBusInterface is invalid") + QL1SV("\n\n") + service + u' ' + path + u' '+ interface + u' ' + method,
                                     QL1SV("lxqt-logo.png"));
         }
         return false;

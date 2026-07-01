@@ -287,16 +287,16 @@ QString SettingsPrivate::localizedKey(const QString& key) const
          lang = QString::fromLocal8Bit(qgetenv("LANG"));
 
 
-    QString modifier = lang.section(QL1C('@'), 1);
+    QString modifier = lang.section(u'@', 1);
     if (!modifier.isEmpty())
         lang.truncate(lang.length() - modifier.length() - 1);
 
-    QString encoding = lang.section(QL1C('.'), 1);
+    QString encoding = lang.section(u'.', 1);
     if (!encoding.isEmpty())
         lang.truncate(lang.length() - encoding.length() - 1);
 
 
-    QString country = lang.section(QL1C('_'), 1);
+    QString country = lang.section(u'_', 1);
     if (!country.isEmpty())
         lang.truncate(lang.length() - country.length() - 1);
 
@@ -521,7 +521,7 @@ QString LXQtThemeData::loadQss(const QString& qssFile) const
 
     // handle relative paths
     QString qssDir = QFileInfo(qssFile).canonicalPath();
-    qss.replace(urlRegexp, QL1SV("url(") + qssDir + QL1C('/'));
+    qss.replace(urlRegexp, QL1SV("url(") + qssDir + u'/');
 
     return qss;
 }

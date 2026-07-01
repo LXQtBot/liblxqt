@@ -157,12 +157,12 @@ LXQT_API QDebug operator<<(QDebug dbg, const LXQt::PluginInfo &pluginInfo)
  ************************************************/
 LXQT_API QDebug operator<<(QDebug dbg, const PluginInfoList& list)
 {
-    dbg.nospace() << QL1C('(');
+    dbg.nospace() << u'(';
     for (int i=0; i<list.size(); ++i)
     {
         if (i) dbg.nospace() << QL1SV(", ");
         dbg << list.at(i);
     }
-    dbg << QL1C(')');
+    dbg << u')';
     return dbg.space();
 }
