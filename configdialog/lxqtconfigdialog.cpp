@@ -31,6 +31,8 @@
 
 #include "lxqtsettings.h"
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 ConfigDialogPrivate::ConfigDialogPrivate(ConfigDialog *q, Settings *settings)
@@ -133,7 +135,7 @@ void ConfigDialog::addPage(QWidget* page, const QString& name, const QStringList
         page->layout()->setContentsMargins(QMargins());
     }
 
-    QStringList icons = QStringList(iconNames) << QL1SV("application-x-executable");
+    QStringList icons = QStringList(iconNames) << "application-x-executable"_L1;
     new QListWidgetItem(XdgIcon::fromTheme(icons), name, d->ui->moduleList);
     d->mIcons.append(icons);
     d->ui->stackedWidget->addWidget(page);

@@ -38,6 +38,8 @@
 
 #include <XdgDirs>
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 bool translate(const QString &name, const QString &owner = QString());
@@ -110,8 +112,8 @@ bool translate(const QString &name, const QString &owner)
                 QCoreApplication::installTranslator(appTranslator);
                 return true;
             }
-            else if (locale == QL1SV("C") ||
-                        locale.startsWith(QL1SV("en")))
+            else if (locale == "C"_L1 ||
+                        locale.startsWith("en"_L1))
             {
                 // English is the default. Even if there isn't an translation
                 // file, we return true. It's translated anyway.
@@ -135,7 +137,7 @@ bool Translator::translateApplication(const QString &applicationName)
     const QString locale = QLocale::system().name();
     QTranslator *qtTranslator = new QTranslator(qApp);
 
-    if (qtTranslator->load(QL1SV("qt_") + locale, QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
+    if (qtTranslator->load("qt_"_L1 + locale, QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
     {
         qApp->installTranslator(qtTranslator);
     }

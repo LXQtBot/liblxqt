@@ -160,7 +160,7 @@ LXQT_API QDebug operator<<(QDebug dbg, const PluginInfoList& list)
     dbg.nospace() << u'(';
     for (int i=0; i<list.size(); ++i)
     {
-        if (i) dbg.nospace() << QL1SV(", ");
+        if (i) dbg.nospace() << ", "_L1;
         dbg << list.at(i);
     }
     dbg << u')';

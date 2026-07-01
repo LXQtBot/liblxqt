@@ -52,10 +52,12 @@ using namespace LXQt;
 #include <QDebug>
 #include <QSocketNotifier>
 
+
+using namespace Qt::Literals::StringLiterals;
 Application::Application(int &argc, char** argv)
     : QApplication(argc, argv)
 {
-    setWindowIcon(QIcon(QFile::decodeName(LXQT_GRAPHICS_DIR) + QL1SV("/lxqt_logo.png")));
+    setWindowIcon(QIcon(QFile::decodeName(LXQT_GRAPHICS_DIR) + "/lxqt_logo.png"_L1));
     connect(Settings::globalSettings(), &GlobalSettings::lxqtThemeChanged, this, &Application::updateTheme);
     updateTheme();
 }

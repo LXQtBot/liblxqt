@@ -31,6 +31,8 @@
 #include <QScopedPointer>
 #include "lxqtglobals.h"
 
+
+using namespace Qt::Literals::StringLiterals;
 namespace Ui {
 class ConfigDialog;
 }
@@ -63,7 +65,7 @@ public:
     /*!
      * Add a page to the configure dialog
      */
-    void addPage(QWidget* page, const QString& name, const QString& iconName = QL1SV("application-x-executable"));
+    void addPage(QWidget* page, const QString& name, const QString& iconName = "application-x-executable"_L1);
 
     /*!
      * Add a page to the configure dialog, attempting several alternative icons to find one in the theme

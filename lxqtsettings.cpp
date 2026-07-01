@@ -54,9 +54,9 @@ public:
     {
         // HACK: we need to ensure that the user (~/.config/lxqt/<module>.conf)
         //       exists to have functional mWatcher
-        if (!mParent->contains(QL1SV("__userfile__")))
+        if (!mParent->contains("__userfile__"_L1))
         {
-            mParent->setValue(QL1SV("__userfile__"), true);
+            mParent->setValue("__userfile__"_L1, true);
             mParent->sync();
         }
         mWatcher.addPath(mParent->fileName());
@@ -395,7 +395,7 @@ LXQtTheme::LXQtTheme(const QString &path):
     }
 
     if (QDir(path).exists(QStringLiteral("preview.png")))
-        d->mPreviewImg = path + QL1SV("/preview.png");
+        d->mPreviewImg = path + "/preview.png"_L1;
 }
 
 
@@ -504,7 +504,7 @@ QString LXQtTheme::qss(const QString& module) const
 QString LXQtThemeData::loadQss(const QString& qssFile) const
 {
     // TODO: original QRegExp, check new syntax and QRegExp::RegExp2 meaning
-    // QRegExp(QL1SV("url.[ \\t\\s]*"), Qt::CaseInsensitive, QRegExp::RegExp2);
+    // QRegExp("url.[ \\t\\s]*"_L1, Qt::CaseInsensitive, QRegExp::RegExp2);
     static const QRegularExpression urlRegexp(QStringLiteral("url.[ \\t\\s]*"), QRegularExpression::CaseInsensitiveOption);
 
     QFile f(qssFile);
@@ -521,7 +521,7 @@ QString LXQtThemeData::loadQss(const QString& qssFile) const
 
     // handle relative paths
     QString qssDir = QFileInfo(qssFile).canonicalPath();
-    qss.replace(urlRegexp, QL1SV("url(") + qssDir + u'/');
+    qss.replace(urlRegexp, "url("_L1 + qssDir + u'/');
 
     return qss;
 }
@@ -541,15 +541,15 @@ QString LXQtTheme::desktopBackground(int screen) const
     QString themeDir = QFileInfo(wallpaperCfgFileName).absolutePath();
     // There is something strange... If I remove next line the wallpapers array is not found...
     s.childKeys();
-    s.beginReadArray(QL1SV("wallpapers"));
+    s.beginReadArray("wallpapers"_L1);
 
     s.setArrayIndex(screen - 1);
-    if (s.contains(QL1SV("file")))
-        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value(QL1SV("file")).toString()));
+    if (s.contains("file"_L1))
+        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value("file"_L1).toString()));
 
     s.setArrayIndex(0);
-    if (s.contains(QL1SV("file")))
-        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value(QL1SV("file")).toString()));
+    if (s.contains("file"_L1))
+        return QDir::cleanPath("%1/%2"_L1.arg(themeDir, s.value("file"_L1).toString()));
 
     return QString();
 }
@@ -561,7 +561,7 @@ QString LXQtTheme::desktopBackground(int screen) const
 const LXQtTheme &LXQtTheme::currentTheme()
 {
     static LXQtTheme theme;
-    QString name = Settings::globalSettings()->value(QL1SV("theme")).toString();
+    QString name = Settings::globalSettings()->value("theme"_L1).toString();
     if (theme.name() != name)
     {
         theme = LXQtTheme(name);
@@ -662,15 +662,15 @@ GlobalSettings::GlobalSettings():
     Settings(QStringLiteral("lxqt")),
     d_ptr(new GlobalSettingsPrivate(this))
 {
-    if (value(QL1SV("icon_theme")).toString().isEmpty())
+    if (value("icon_theme"_L1).toString().isEmpty())
     {
         qWarning() << "Icon Theme not set. Fallbacking to Oxygen, if installed"_L1;
-        const QString fallback(QL1SV("oxygen"));
+        const QString fallback("oxygen"_L1);
 
         const QDir dir(QStringLiteral(LXQT_DATA_DIR) + QStringLiteral("/icons"));
         if (dir.exists(fallback))
         {
-            setValue(QL1SV("icon_theme"), fallback);
+            setValue("icon_theme"_L1, fallback);
             sync();
         }
         else
@@ -697,14 +697,14 @@ void GlobalSettings::fileChanged()
     sync();
 
 
-    QString it = value(QL1SV("icon_theme")).toString();
+    QString it = value("icon_theme"_L1).toString();
     if (d->mIconTheme != it)
     {
         Q_EMIT iconThemeChanged();
     }
 
-    QString rt = value(QL1SV("theme")).toString();
-    qlonglong themeUpdated = value(QL1SV("__theme_updated__")).toLongLong();
+    QString rt = value("theme"_L1).toString();
+    qlonglong themeUpdated = value("__theme_updated__"_L1).toLongLong();
     if ((d->mLXQtTheme != rt) || (d->mThemeUpdated != themeUpdated))
     {
         d->mLXQtTheme = rt;
