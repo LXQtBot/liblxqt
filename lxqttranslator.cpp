@@ -170,7 +170,7 @@ bool Translator::translatePlugin(const QString &pluginName, const QString& type)
 {
     static QSet<QString> loadedPlugins;
 
-    const QString fullName = type % u'/' % pluginName;
+    const QString fullName = type + u'/' + pluginName;
     if (loadedPlugins.contains(fullName))
         return true;
 
