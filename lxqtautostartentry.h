@@ -28,6 +28,8 @@
 #include "lxqtglobals.h"
 #include <XdgDesktopFile>
 
+#include <QString>
+
 namespace LXQt
 {
 

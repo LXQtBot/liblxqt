@@ -38,6 +38,8 @@
 
 #include <XdgDesktopFile>
 
+
+using namespace Qt::Literals::StringLiterals;
 class QLibrary;
 
 namespace LXQt
@@ -76,7 +78,7 @@ public:
     QString id() const { return mId; }
 
     //! This function is provided for convenience. It's equivalent to calling value("ServiceTypes").toString().
-    QString serviceType() const  { return value(QL1SV("ServiceTypes")).toString(); }
+    QString serviceType() const  { return value("ServiceTypes"_L1).toString(); }
 
     //! Reimplemented from XdgDesktopFile.
     virtual bool isValid() const;
@@ -93,10 +95,10 @@ public:
 
       If the same filename is located under multiple directories only the first file should be used.
     */
-    static QList<PluginInfo> search(const QStringList& desktopFilesDirs, const QString& serviceType, const QString& nameFilter = QL1SV("*"));
+    static QList<PluginInfo> search(const QStringList& desktopFilesDirs, const QString& serviceType, const QString& nameFilter = "*"_L1);
 
     /// This function is provided for convenience. It's equivalent to new calling search(QString(desktopFilesDir), serviceType, nameFilter)
-    static QList<PluginInfo> search(const QString& desktopFilesDir, const QString& serviceType, const QString& nameFilter = QL1SV("*"));
+    static QList<PluginInfo> search(const QString& desktopFilesDir, const QString& serviceType, const QString& nameFilter = "*"_L1);
 
 private:
     QString mId;

@@ -27,6 +27,8 @@
 #include <QMessageBox>
 #include <QDebug>
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 Notification::Notification(const QString& summary, QObject* parent) :
@@ -92,7 +94,7 @@ void Notification::setHint(const QString& hintName, const QVariant& value)
 void Notification::setUrgencyHint(Urgency urgency)
 {
     Q_D(Notification);
-    d->mHints.insert(QL1SV("urgency"), qvariant_cast<uchar>(urgency));
+    d->mHints.insert("urgency"_L1, qvariant_cast<uchar>(urgency));
 }
 
 void Notification::clearHints()
@@ -136,8 +138,8 @@ NotificationPrivate::NotificationPrivate(const QString& summary, Notification* p
     mTimeout(-1),
     q_ptr(parent)
 {
-    mInterface = new OrgFreedesktopNotificationsInterface(QL1SV("org.freedesktop.Notifications"),
-                                                          QL1SV("/org/freedesktop/Notifications"),
+    mInterface = new OrgFreedesktopNotificationsInterface("org.freedesktop.Notifications"_L1,
+                                                          "/org/freedesktop/Notifications"_L1,
                                                           QDBusConnection::sessionBus(), this);
     connect(mInterface, &OrgFreedesktopNotificationsInterface::NotificationClosed,
         this, &NotificationPrivate::notificationClosed);
@@ -157,8 +159,8 @@ void NotificationPrivate::update()
     }
     else
     {
-        if (mHints.contains(QL1SV("urgency")) && mHints.value(QL1SV("urgency")).toInt() != Notification::UrgencyLow)
-            QMessageBox::information(nullptr, tr("Notifications Fallback"), mSummary + QL1SV(" \n\n ") + mBody);
+        if (mHints.contains("urgency"_L1) && mHints.value("urgency"_L1).toInt() != Notification::UrgencyLow)
+            QMessageBox::information(nullptr, tr("Notifications Fallback"), mSummary + " \n\n "_L1 + mBody);
     }
 }
 
@@ -171,7 +173,7 @@ void NotificationPrivate::setActions(QStringList actions, int defaultAction)
     for (int ix = 0; ix < N; ix++)
     {
         if (ix == defaultAction)
-            mActions.append(QL1SV("default"));
+            mActions.append("default"_L1);
         else
             mActions.append(QString::number(ix));
         mActions.append(actions[ix]);
@@ -228,7 +230,7 @@ void NotificationPrivate::handleAction(uint id, const QString& key)
     qDebug() << "action invoked:" << key;
     bool ok = true;
     int keyId;
-    if (key == QL1SV("default"))
+    if (key == "default"_L1)
         keyId = mDefaultAction;
     else
         keyId = key.toInt(&ok);

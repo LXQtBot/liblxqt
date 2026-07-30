@@ -24,10 +24,13 @@
 
 #include "lxqtautostartentry.h"
 #include <QFileInfo>
+#include <QLatin1StringView>
+#include <QString>
 
 #include <XdgAutoStart>
 #include <XdgDirs>
 
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 AutostartEntry::AutostartEntry() :
@@ -41,7 +44,7 @@ AutostartEntry::AutostartEntry(const QString& name):
     const QStringList& dirs = XdgDirs::autostartDirs();
     for (const QString& dir : dirs)
     {
-        const QString path = QString::fromLatin1("%1/%2").arg(dir, name);
+        const QString path = "%1/%2"_L1.arg(dir, name);
         if (QFile(path).exists())
         {
             mSystemFile.load(path);
@@ -50,7 +53,7 @@ AutostartEntry::AutostartEntry(const QString& name):
         }
     }
 
-    const QString path = QString::fromLatin1("%1/%2").arg(XdgDirs::autostartHome(), name);
+    const QString path = "%1/%2"_L1.arg(XdgDirs::autostartHome(), name);
     if (QFile(path).exists())
     {
         mLocalFile.load(path);
@@ -105,11 +108,11 @@ void AutostartEntry::setEnabled(bool enable)
     XdgDesktopFile f = file();
     if (enable)
     {
-        f.removeEntry(QL1SV("Hidden"));
-        f.removeEntry(QL1SV("X-LXQt-Autostart-disabled"));
+        f.removeEntry("Hidden"_L1);
+        f.removeEntry("X-LXQt-Autostart-disabled"_L1);
     }
     else
-        f.setValue(QL1SV("X-LXQt-Autostart-disabled"), true);
+        f.setValue("X-LXQt-Autostart-disabled"_L1, true);
 
     setFile(f);
 }
@@ -117,8 +120,8 @@ void AutostartEntry::setEnabled(bool enable)
 bool AutostartEntry::isEnabled() const
 {
     return !isEmpty()
-           && !file().value(QL1SV("Hidden"), false).toBool()
-           && !file().value(QL1SV("X-LXQt-Autostart-disabled"), false).toBool();
+           && !file().value("Hidden"_L1, false).toBool()
+           && !file().value("X-LXQt-Autostart-disabled"_L1, false).toBool();
 }
 
 bool AutostartEntry::commit()

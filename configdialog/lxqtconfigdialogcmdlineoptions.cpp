@@ -24,6 +24,8 @@
 
 #include <QCommandLineParser>
 
+
+using namespace Qt::Literals::StringLiterals;
 namespace LXQt {
 
 class Q_DECL_HIDDEN ConfigDialogCmdLineOptionsPrivate {
@@ -44,13 +46,13 @@ bool ConfigDialogCmdLineOptions::setCommandLine(QCommandLineParser *parser)
     if (!parser)
         return false;
 
-    return parser->addOption(QCommandLineOption{QStringList{QL1SV("s"), QL1SV("show-page")}, QCoreApplication::tr("Choose the page to be shown."), QL1SV("name")});
+    return parser->addOption(QCommandLineOption{QStringList{"s"_L1, "show-page"_L1}, QCoreApplication::tr("Choose the page to be shown."), "name"_L1});
 }
 
 void ConfigDialogCmdLineOptions::process(QCommandLineParser &parser)
 {
-    if (parser.isSet(QL1SV("show-page"))) {
-        d->mPage = parser.value(QL1SV("show-page"));
+    if (parser.isSet("show-page"_L1)) {
+        d->mPage = parser.value("show-page"_L1);
     }
 }
 

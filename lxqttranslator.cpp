@@ -38,6 +38,8 @@
 
 #include <XdgDirs>
 
+
+using namespace Qt::Literals::StringLiterals;
 using namespace LXQt;
 
 bool translate(const QString &name, const QString &owner = QString());
@@ -51,7 +53,7 @@ QStringList *getSearchPaths()
     if (searchPath == nullptr)
     {
         searchPath = new QStringList();
-        *searchPath << XdgDirs::dataDirs(QL1C('/') + QL1SV(LXQT_RELATIVE_SHARE_TRANSLATIONS_DIR));
+        *searchPath << XdgDirs::dataDirs(u'/' + QL1SV(LXQT_RELATIVE_SHARE_TRANSLATIONS_DIR));
         *searchPath << QL1SV(LXQT_SHARE_TRANSLATIONS_DIR);
         searchPath->removeDuplicates();
     }
@@ -95,23 +97,23 @@ bool translate(const QString &name, const QString &owner)
 
         if (!owner.isEmpty())
         {
-            subPaths << path + QL1C('/') + owner + QL1C('/') + name;
+            subPaths << path + u'/' + owner + u'/' + name;
         }
         else
         {
-            subPaths << path + QL1C('/') + name;
+            subPaths << path + u'/' + name;
             subPaths << path;
         }
 
         for(const QString &p : std::as_const(subPaths))
         {
-            if (appTranslator->load(name + QL1C('_') + locale, p))
+            if (appTranslator->load(name + u'_' + locale, p))
             {
                 QCoreApplication::installTranslator(appTranslator);
                 return true;
             }
-            else if (locale == QL1SV("C") ||
-                        locale.startsWith(QL1SV("en")))
+            else if (locale == "C"_L1 ||
+                        locale.startsWith("en"_L1))
             {
                 // English is the default. Even if there isn't an translation
                 // file, we return true. It's translated anyway.
@@ -135,7 +137,7 @@ bool Translator::translateApplication(const QString &applicationName)
     const QString locale = QLocale::system().name();
     QTranslator *qtTranslator = new QTranslator(qApp);
 
-    if (qtTranslator->load(QL1SV("qt_") + locale, QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
+    if (qtTranslator->load("qt_"_L1 + locale, QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
     {
         qApp->installTranslator(qtTranslator);
     }
@@ -170,7 +172,7 @@ bool Translator::translatePlugin(const QString &pluginName, const QString& type)
 {
     static QSet<QString> loadedPlugins;
 
-    const QString fullName = type % QL1C('/') % pluginName;
+    const QString fullName = type + u'/' + pluginName;
     if (loadedPlugins.contains(fullName))
         return true;
 

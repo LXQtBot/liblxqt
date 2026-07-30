@@ -38,6 +38,7 @@
 #include <XdgIcon>
 #include <QMessageBox>
 #include <QAction>
+#include <QLatin1StringView>
 #include <QPointer>
 #include <QProcess>
 #include <QGuiApplication> // for Q_DECLARE_TR_FUNCTIONS and platform detect
@@ -45,6 +46,8 @@
 #include <QDebug>
 
 #include <X11/extensions/scrnsaver.h>
+
+using namespace Qt::Literals::StringLiterals;
 
 // Avoid polluting everything with X11/Xlib.h:
 typedef struct _XDisplay Display;
@@ -143,22 +146,22 @@ public:
     ScreenSaverPrivate(ScreenSaver *q) : q_ptr(q) {
         if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
             Settings settings(QStringLiteral("lxqt"));
-            settings.beginGroup(QL1SV("Screensaver"));
-            QString lockCommand(settings.value(QL1SV("lock_command"), QL1SV("xdg-screensaver lock")).toString());
+            settings.beginGroup("Screensaver"_L1);
+            QString lockCommand(settings.value("lock_command"_L1, "xdg-screensaver lock"_L1).toString());
             settings.endGroup();
 
             QString sessionConfig(QString::fromLocal8Bit(qgetenv("LXQT_SESSION_CONFIG")));
             Settings sessionSettings(sessionConfig.isEmpty() ? QStringLiteral("session") : sessionConfig);
-            lock_command = sessionSettings.value(QL1SV("lock_command"), lockCommand).toString();
+            lock_command = sessionSettings.value("lock_command"_L1, lockCommand).toString();
        } else if (QGuiApplication::platformName() == QStringLiteral("wayland")) {
             Settings settings(QStringLiteral("lxqt"));
-            settings.beginGroup(QL1SV("Screensaver"));
-            QString lockCommand(settings.value(QL1SV("lock_command_wayland")).toString());
+            settings.beginGroup("Screensaver"_L1);
+            QString lockCommand(settings.value("lock_command_wayland"_L1).toString());
             settings.endGroup();
 
             QString sessionConfig(QString::fromLocal8Bit(qgetenv("LXQT_SESSION_CONFIG")));
             Settings sessionSettings(sessionConfig.isEmpty() ? QStringLiteral("session") : sessionConfig);
-            lock_command = sessionSettings.value(QL1SV("lock_command_wayland"), lockCommand).toString();
+            lock_command = sessionSettings.value("lock_command_wayland"_L1, lockCommand).toString();
         }
     }
 
@@ -180,7 +183,7 @@ void ScreenSaverPrivate::reportLockProcessError()
     QString message;
     // contains() instead of startsWith() as the command might be "env FOO=bar xdg-screensaver lock"
     // (e.g., overwrite $XDG_CURRENT_DESKTOP for some different behaviors)
-    if (lock_command.contains(QL1SV("xdg-screensaver"))) {
+    if (lock_command.contains("xdg-screensaver"_L1)) {
         message = tr("Failed to run  \"%1\". "
                      "Ensure you have a locker/screensaver compatible with xdg-screensaver installed and running."
                     );
@@ -271,7 +274,7 @@ QList<QAction*> ScreenSaver::availableActions()
     QList<QAction*> ret;
     QAction * act;
 
-    act = new QAction(XdgIcon::fromTheme(QL1SV("system-lock-screen"), QL1SV("lock")), tr("Lock Screen"), this);
+    act = new QAction(XdgIcon::fromTheme("system-lock-screen"_L1, "lock"_L1), tr("Lock Screen"), this);
     connect(act, &QAction::triggered, this, &ScreenSaver::lockScreen);
     ret.append(act);
 
@@ -295,3 +298,5 @@ void ScreenSaver::lockScreen()
 } // namespace LXQt
 
 #include "moc_lxqtscreensaver.cpp"
+
+using namespace Qt::Literals::StringLiterals;
